@@ -1,0 +1,385 @@
+\documentclass[aspectratio=169,compress,handout,t,xcolor=table]{beamer}
+
+%! Mandatory packages
+\usepackage[utf8]{inputenc}                                %! Character encoding
+\usepackage[T1]{fontenc}                                   %! Font encoding
+\usepackage[english]{babel}                                %! Language setting
+\usepackage{graphicx}
+
+%%%% Frame design
+\usetheme{Boadilla}                                        % Design base
+\usecolortheme{default}                                    % Color structure base
+
+% Colors
+\definecolor{MyBackground}{HTML}{FFFAEE}                   % Cream color with dark text works well for dyslexic readers: FFFAEE
+\definecolor{MyBackground}{HTML}{FFFFFF}                   % White for online slides
+\setbeamercolor{background canvas}{bg=MyBackground}
+\definecolor{MyStructure}{HTML}{005471}
+\setbeamercolor{title}{fg=MyStructure}
+\setbeamercolor{frametitle}{fg=MyStructure}
+\setbeamercolor{structure}{fg=MyStructure}
+
+% Fonts
+\usepackage{tgheros}                                       % TG Heros font package
+\beamertemplatenavigationsymbolsempty                      % Disable navigation bar
+
+% Enumerate / itemize design
+\setbeamertemplate{enumerate items}[circle]
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{itemize subitem}[triangle]
+\setbeamertemplate{section in toc}[sections numbered]
+\usepackage{xpatch}                                        % Global itemize/enumerate list separation
+\xpatchcmd{\itemize}
+  {\def\makelabel}
+  {\ifnum\@itemdepth=1\relax
+     \setlength\itemsep{2ex}% separation for first level
+   \else
+     \ifnum\@itemdepth=2\relax
+       \setlength\itemsep{1ex}% separation for second level
+     \else
+       \ifnum\@itemdepth=3\relax
+         \setlength\itemsep{0.5ex}% separation for third level
+   \fi\fi\fi\def\makelabel
+  }
+{}
+{}
+
+
+% Footer
+\setbeamertemplate{footline}
+{
+ \hbox{%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.6ex,dp=1ex,center]{section in foot}%
+    \usebeamerfont{section in foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.75\paperwidth,ht=2.6ex,dp=1ex,center]{section in foot}%
+    \usebeamerfont{section in foot}\insertsubtitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.05\paperwidth,ht=2.6ex,dp=1ex,center]{subsection in foot}%
+    \usebeamerfont{section in foot} \insertframenumber/\inserttotalframenumber
+  \end{beamercolorbox}}%
+
+  \vskip0pt%
+}
+\setbeamertemplate{frametitle}[default][left]              % Push frame title to left
+\setbeamertemplate{navigation symbols}{}                   % Remove navigation symbols
+
+\renewcommand\textbullet{\ensuremath{\bullet}}             % Opress textbullet font warning
+\usepackage{appendixnumberbeamer}                          % Restart slide numbering for backup slides (\appendix)
+
+% Roadmap
+\AtBeginSection[]
+{
+	\ifnum \value{framenumber}>0
+   \begin{frame}[plain]
+       \frametitle{Plan for today}
+       \tableofcontents[currentsection]
+   \end{frame}
+   \addtocounter{framenumber}{-1}
+  \else
+   \fi
+}
+
+% Stable preamble with path
+% Text packages
+\usepackage{enumerate}                                     % Custom enumeration lists
+\usepackage{footmisc}                                      % Stable footnotes in headings
+\usepackage{natbib}                                        % Bibliography
+\usepackage{hyperref}                                      % Hyperreferences
+    \hypersetup{
+      % colorlinks,
+      % citecolor=black,
+      % filecolor=black,
+      % linkcolor=black,
+      urlcolor=MyStructure
+    }
+\usepackage{multicol}                                      % Multiple columns in text
+\usepackage[nointegrals]{wasysym}                          % WASY2 symbols for contradiction \lightning
+\usepackage{algorithm}                                     % Pseudocode packages
+\usepackage{algpseudocode}
+\usepackage{setspace}                                      % Custom line spacing
+
+% Figure and table packages
+\usepackage{float}                                         % Figure floats
+\usepackage[position=top]{subfig}                          % Subfigures
+\usepackage{multirow}                                      % Merged rows in tables
+\usepackage{dcolumn}                                       % Custom table delimiters
+    \newcolumntype{d}[1]{D{.}{.}{#1}}
+    \newcolumntype{m}[1]{D{.}{\$}{#1}}
+    \newcommand\hd[1]{\multicolumn{1}{c}{#1}}
+\usepackage[labelfont=bf, font=normalsize]{caption}        % Bold captions
+    \captionsetup{format=hang}
+\usepackage{array}                                         % Reveal table by columns
+\usepackage{animate}                                       % Animated figures, GIF-like appearance
+\usepackage{media9}                                        % For \mediabutton
+
+% Graphics packages
+\usepackage{tikz}                                          % TikZ drawings
+\usepackage{pgfplots}                                      % PGFPlots plots
+    \pgfplotsset{                                          % PGFPlots options
+        cartesian/.style={                                 % Declaring Cartesian plane style
+            % Axis alignment
+            axis x line=middle,
+            axis y line=middle,
+            % Axis labels alignment
+            every axis x label/.style={at={(current axis.right of origin)},anchor=north west},
+            every axis y label/.style={at={(current axis.above origin)},anchor=north east},
+            % Legend alignment
+            every axis legend/.append style={legend pos=outer north east}
+        },
+        % Version declaration for compatibility
+        compat=1.11
+    }
+\usetikzlibrary{calc}
+    % Node setup for extensive form games
+    \tikzset{
+        % Two node styles for game trees: solid and hollow
+        solid node/.style={circle,draw,inner sep=1.5,fill=black},
+        hollow node/.style={circle,draw,inner sep=1.5},
+        % Solution nodes
+        solidsol node/.style={blue,circle,draw,inner sep=1.5,fill=blue},
+        hollowsol node/.style={blue,circle,draw,inner sep=1.5}
+    }
+
+% Math packages
+\usepackage{amsmath}                                       % AMS math package
+\usepackage{amssymb}                                       % Math symbols
+\usepackage{amsthm}                                        % Custom theorem environments
+\usepackage{units}                                         % Numerical fractions
+\usepackage{centernot}                                     % Logical negation in the middle of characters; e.g. not iff
+\usepackage{dsfont}                                        % For indicator function: \(\mathds{1}\)
+
+\renewcommand{\qedsymbol}{$\blacksquare$}                  % QED
+
+% Mathematical operators
+\DeclareMathOperator{\E}{\mathbb{E}}                       % Expected value
+\DeclareMathOperator{\Emax}{\E\!\max}                      % Emax
+\DeclareMathOperator{\var}{var}                            % Variance
+\DeclareMathOperator{\cov}{cov}                            % Covariance
+\DeclareMathOperator{\corr}{corr}                          % Correlation
+\DeclareMathOperator{\avar}{avar}                          % Asymptotic variance
+\DeclareMathOperator*{\plim}{plim}                         % Probability limit
+\DeclareMathOperator{\lag}{lag}                            % Lag operator
+\DeclareMathOperator{\rank}{rank}                          % Rank
+\DeclareMathOperator{\tr}{tr}                              % Trace
+\DeclareMathOperator{\diag}{diag}                          % Diagonal
+\DeclareMathOperator{\I}{I}                                % Identity matrix
+
+\providecommand{\abs}[1]{\left\lvert#1\right\rvert}        % Absolute value
+\providecommand{\norm}[1]{\left\lVert#1\right\rVert}       % Norm
+\providecommand{\ip}[1]{\left\langle#1\right\rangle}       % Inner product
+\providecommand{\csp}{\overline{\mathrm{sp}}}              % Closed span
+\providecommand{\pto}{\overset{p}{\to}}                    % Convergence in probability
+\providecommand{\dto}{\overset{d}{\to}}                    % Convergence in distribution
+\providecommand{\indep}{\perp \!\!\!\! \perp}              % Independent
+
+% Additional commands
+\newcommand\myText[1]{\text{\scriptsize\tabular[t]{@{}c@{}}#1\endtabular}}
+
+
+% File paths
+\newcommand{\figpath}{""}
+\newcommand{\tabpath}{""}
+
+
+\title{Topics in Applied Econometrics}
+\subtitle[]{Imperfect compliance}
+% Single author
+\author[Attila Gyetvai]{Attila Gyetvai}
+\institute[]{Duke Economics \\ Summer 2020}
+% % Multiple authors
+% \author[Gyetvai, Zhu]{Attila Gyetvai\inst{1} \and Maria Zhu\inst{1}}
+% \institute[Duke] % 
+% {
+%  \inst{1} Department of Economics \\ Duke University \and
+% }
+\date{}
+
+
+\begin{document}
+
+{
+\setbeamertemplate{headline}{}            % Empty header
+\setbeamertemplate{footline}{}            % Empty footer  
+\begin{frame}
+  \titlepage
+\end{frame}
+}
+\addtocounter{framenumber}{-1}
+
+% ----------------------------------------------- % 
+\begin{frame}[c]{How to tackle an empirical project}
+  \begin{enumerate}
+    \addtolength{\itemsep}{0.5\baselineskip}
+    \item What causal effects are we interested in?
+    \item \textcolor{lightgray}{What ideal experiment would capture this effect?}
+    \item \textcolor{lightgray}{What is our identification strategy?}
+    \item \textcolor{lightgray}{What is our mode of statistical inference?}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Treatment status vs.\ assignment}
+  \begin{itemize}
+    \item Not everyone is treated who is supposed to be
+    \item We should separate treatment status \(D\) from assignment to treatment \(Z\)
+    \item \(Z_i = 1\) if \(i\) is assigned to be treated \(\big/\) 0 if \(i\) is not assigned to be treated
+    \item Note: we haven't yet used the language ``control groups''
+    \begin{itemize}
+      \item Assignment to control can also be imperfect, just like assignment to treatment
+      \item Now we can formalize control units: \(Z_i=0\)
+      \item We are typically interested in the difference between treated and untreated units, \\ not treatment and control
+      \item If the takeup of the treatment is perfect, all control units are untreated
+    \end{itemize}
+    \item However, treatment takeup is seldom perfect
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Treatment status vs.\ assignment (cont'd)}
+  \begin{itemize}
+    \item We can think of treatment takeup analogously to potential outcomes: \\
+    would the unit be treated if it is assigned to treatment?
+    \item \(D_{1i}\): treatment status of \(i\) when assigned to treatment
+    \item \(D_{0i}\): treatment status of \(i\) when assigned to control
+    \item Observed treatment status:
+    \begin{align*}
+      D_i &= \begin{cases}
+        D_{1i} & \text{ if } Z_i = 1 \\
+        D_{0i} & \text{ if } Z_i = 0
+      \end{cases}
+      \end{align*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Compliance types}
+  \begin{itemize}
+    \item The two potential treatment statuses and the two assignments create \\ a \(2 \times 2\) matrix of compliance types
+
+    \vspace*{1em}
+    \begin{table}
+      \centering
+      \begin{tabular}{c|c|c|}
+        \multicolumn{1}{c}{} & \multicolumn{1}{c}{\(D_{0i}=1\)} & \multicolumn{1}{c}{\(D_{0i}=0\)} \\
+        \cline{2-3}
+        \(D_{1i}=1\) & always-takers & compliers     \\
+        \cline{2-3}
+        \(D_{1i}=0\) & defiers       & never-takers  \\
+        \cline{2-3}
+      \end{tabular}
+    \end{table}
+    \item In an ideal experiment, we only have compliers
+    \item Also, we typically rule out defiers
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Observing compliance types}
+  \begin{itemize}
+    \item Which compliance types can we observe in the data?
+    \item \(2 \times 2\) matrix of compliance types by treatment status and assignment to treatment (no defiers)
+
+    \vspace*{1em}
+    \begin{table}
+      \centering
+      \begin{tabular}{c|c|c|}
+        \multicolumn{1}{c}{} & \multicolumn{1}{c}{\(Z_{i}=1\)} & \multicolumn{1}{c}{\(Z_{i}=0\)} \\
+        \cline{2-3}
+        \(D_{i}=1\) & compliers / always-takers & always-takers \\
+        \cline{2-3}
+        \(D_{i}=0\) & never-takers  & compliers / never-takers  \\
+        \cline{2-3}
+      \end{tabular}
+    \end{table}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Potential outcomes revisited}
+  \begin{itemize}
+    \item Potential outcomes can also be thought of in this matrix form
+    \item \(i\)'s outcome if their assignment is \(Z_i\) and treatment status is \(D_i\)
+
+    \vspace*{1em}
+    \begin{table}
+      \centering
+      \begin{tabular}{c|c|c|}
+        \multicolumn{1}{c}{} & \multicolumn{1}{c}{\(Z_{i}=1\)} & \multicolumn{1}{c}{\(Z_{i}=0\)} \\
+        \cline{2-3}
+        \(D_{i}=1\) & \(Y_{1i} (1)\) & \(Y_{1i} (0)\) \\
+        \cline{2-3}
+        \(D_{i}=0\) & \(Y_{0i} (1)\) & \(Y_{0i} (0)\)  \\
+        \cline{2-3}
+      \end{tabular}
+    \end{table}
+
+    \item In short: \(Y_{1i} (Z_i)\), \(Y_{0i} (Z_i)\)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{What can we learn with imperfect compliance?}
+  \begin{itemize}
+    \item We still can compare outcomes of treated vs.\ untreated units
+    \item \ldots but we can also compare outcomes of units assigned to treatment vs.\ control
+    \begin{block}{Intent-to-treat effect (ITT)}
+      \(ITT = \E(Y_{i} \,|\, Z_i=1) - \E(Y_i \,|\, Z_i=0)\)
+    \end{block}
+    \item In some settings, ITT is more important than ATE
+    \item \emph{Example:} mosquito nets \citep*[inspired by][QJE]{Cohen2010}
+    \begin{itemize}
+      \item Imagine that we equip some Kenyan households with mosquito nets to fend off bugs spreading malaria
+      \item Even if some households reject the donation, they benefit from an overall decrease of malaria cases in the area
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Treatment effect among compliers}
+  \begin{itemize}
+    \item The assumptions behind ATE are sometimes unlikely to hold
+    \item However, under a set of milder assumptions we can identify the effect \\ among compliers, called LATE
+    \begin{block}{Local average treatment effect (LATE)}
+      \begin{equation*}
+        LATE = \E(Y_{1i} - Y_{0i} \,|\, D_{1i}=1, D_{0i}=0)
+      \end{equation*}
+    \end{block}
+    \begin{itemize}
+      \item ``Local:'' in the neighborhood of switching from untreated to treated, for those who comply
+    \end{itemize}
+    \item However, we must be careful about LATE assumptions
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{LATE assumptions}
+  \begin{enumerate}
+    \item Independence: \((Y_{1i}, Y_{0i}, D_{1i}, D_{0i}) \indep Z_i\)
+    \begin{itemize}
+      \item Assignment to treatment is independent of potential treatment status and potential outcomes
+    \end{itemize}
+    \item Exclusion: \(Y_{1i} (1) = Y_{1i} (0)\) and \(Y_{0i} (1) = Y_{0i} (0)\)
+    \begin{itemize}
+      \item Outcomes are only affected by treatment status, not assignment
+    \end{itemize}
+    \item Monotonicity: \(D_{1i} \geq D_{0i}\)
+    \begin{itemize}
+      \item If \(i\) is treated when not assigned, they must not be untreated when assigned
+      \item In other words: no defiers
+    \end{itemize}
+  \end{enumerate}
+  \begin{itemize}
+    \item It is possible to further relax these assumptions 
+  \end{itemize}
+\end{frame}
+
+
+\appendix
+\begin{frame}[plain,c]
+  \centerline{\Large{{\usebeamercolor[fg]{title} Additional Slides}}}
+\end{frame}
+\addtocounter{framenumber}{-1}
+\begin{frame}[allowframebreaks]{References}
+  \bibliographystyle{mychicago}
+  \linespread{1}
+  \begin{footnotesize}
+  \bibliography{../refs}
+  \end{footnotesize}
+\end{frame}
+
+
+\end{document}
+ 

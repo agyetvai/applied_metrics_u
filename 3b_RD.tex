@@ -1,0 +1,342 @@
+\documentclass[aspectratio=169,compress,handout,t,xcolor=table]{beamer}
+
+%! Mandatory packages
+\usepackage[utf8]{inputenc}                                %! Character encoding
+\usepackage[T1]{fontenc}                                   %! Font encoding
+\usepackage[english]{babel}                                %! Language setting
+\usepackage{graphicx}
+
+%%%% Frame design
+\usetheme{Boadilla}                                        % Design base
+\usecolortheme{default}                                    % Color structure base
+
+% Colors
+\definecolor{MyBackground}{HTML}{FFFAEE}                   % Cream color with dark text works well for dyslexic readers: FFFAEE
+\definecolor{MyBackground}{HTML}{FFFFFF}                   % White for online slides
+\setbeamercolor{background canvas}{bg=MyBackground}
+\definecolor{MyStructure}{HTML}{005471}
+\setbeamercolor{title}{fg=MyStructure}
+\setbeamercolor{frametitle}{fg=MyStructure}
+\setbeamercolor{structure}{fg=MyStructure}
+
+% Fonts
+\usepackage{tgheros}                                       % TG Heros font package
+\beamertemplatenavigationsymbolsempty                      % Disable navigation bar
+
+% Enumerate / itemize design
+\setbeamertemplate{enumerate items}[circle]
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{itemize subitem}[triangle]
+\setbeamertemplate{section in toc}[sections numbered]
+\usepackage{xpatch}                                        % Global itemize/enumerate list separation
+\xpatchcmd{\itemize}
+  {\def\makelabel}
+  {\ifnum\@itemdepth=1\relax
+     \setlength\itemsep{2ex}% separation for first level
+   \else
+     \ifnum\@itemdepth=2\relax
+       \setlength\itemsep{1ex}% separation for second level
+     \else
+       \ifnum\@itemdepth=3\relax
+         \setlength\itemsep{0.5ex}% separation for third level
+   \fi\fi\fi\def\makelabel
+  }
+{}
+{}
+
+
+% Footer
+\setbeamertemplate{footline}
+{
+ \hbox{%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.6ex,dp=1ex,center]{section in foot}%
+    \usebeamerfont{section in foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.75\paperwidth,ht=2.6ex,dp=1ex,center]{section in foot}%
+    \usebeamerfont{section in foot}\insertsubtitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.05\paperwidth,ht=2.6ex,dp=1ex,center]{subsection in foot}%
+    \usebeamerfont{section in foot} \insertframenumber/\inserttotalframenumber
+  \end{beamercolorbox}}%
+
+  \vskip0pt%
+}
+\setbeamertemplate{frametitle}[default][left]              % Push frame title to left
+\setbeamertemplate{navigation symbols}{}                   % Remove navigation symbols
+
+\renewcommand\textbullet{\ensuremath{\bullet}}             % Opress textbullet font warning
+\usepackage{appendixnumberbeamer}                          % Restart slide numbering for backup slides (\appendix)
+
+% Roadmap
+\AtBeginSection[]
+{
+	\ifnum \value{framenumber}>0
+   \begin{frame}[plain]
+       \frametitle{Plan for today}
+       \tableofcontents[currentsection]
+   \end{frame}
+   \addtocounter{framenumber}{-1}
+  \else
+   \fi
+}
+
+% Stable preamble with path
+% Text packages
+\usepackage{enumerate}                                     % Custom enumeration lists
+\usepackage{footmisc}                                      % Stable footnotes in headings
+\usepackage{natbib}                                        % Bibliography
+\usepackage{hyperref}                                      % Hyperreferences
+    \hypersetup{
+      % colorlinks,
+      % citecolor=black,
+      % filecolor=black,
+      % linkcolor=black,
+      urlcolor=MyStructure
+    }
+\usepackage{multicol}                                      % Multiple columns in text
+\usepackage[nointegrals]{wasysym}                          % WASY2 symbols for contradiction \lightning
+\usepackage{algorithm}                                     % Pseudocode packages
+\usepackage{algpseudocode}
+\usepackage{setspace}                                      % Custom line spacing
+
+% Figure and table packages
+\usepackage{float}                                         % Figure floats
+\usepackage[position=top]{subfig}                          % Subfigures
+\usepackage{multirow}                                      % Merged rows in tables
+\usepackage{dcolumn}                                       % Custom table delimiters
+    \newcolumntype{d}[1]{D{.}{.}{#1}}
+    \newcolumntype{m}[1]{D{.}{\$}{#1}}
+    \newcommand\hd[1]{\multicolumn{1}{c}{#1}}
+\usepackage[labelfont=bf, font=normalsize]{caption}        % Bold captions
+    \captionsetup{format=hang}
+\usepackage{array}                                         % Reveal table by columns
+\usepackage{animate}                                       % Animated figures, GIF-like appearance
+\usepackage{media9}                                        % For \mediabutton
+
+% Graphics packages
+\usepackage{tikz}                                          % TikZ drawings
+\usepackage{pgfplots}                                      % PGFPlots plots
+    \pgfplotsset{                                          % PGFPlots options
+        cartesian/.style={                                 % Declaring Cartesian plane style
+            % Axis alignment
+            axis x line=middle,
+            axis y line=middle,
+            % Axis labels alignment
+            every axis x label/.style={at={(current axis.right of origin)},anchor=north west},
+            every axis y label/.style={at={(current axis.above origin)},anchor=north east},
+            % Legend alignment
+            every axis legend/.append style={legend pos=outer north east}
+        },
+        % Version declaration for compatibility
+        compat=1.11
+    }
+\usetikzlibrary{calc}
+    % Node setup for extensive form games
+    \tikzset{
+        % Two node styles for game trees: solid and hollow
+        solid node/.style={circle,draw,inner sep=1.5,fill=black},
+        hollow node/.style={circle,draw,inner sep=1.5},
+        % Solution nodes
+        solidsol node/.style={blue,circle,draw,inner sep=1.5,fill=blue},
+        hollowsol node/.style={blue,circle,draw,inner sep=1.5}
+    }
+
+% Math packages
+\usepackage{amsmath}                                       % AMS math package
+\usepackage{amssymb}                                       % Math symbols
+\usepackage{amsthm}                                        % Custom theorem environments
+\usepackage{units}                                         % Numerical fractions
+\usepackage{centernot}                                     % Logical negation in the middle of characters; e.g. not iff
+\usepackage{dsfont}                                        % For indicator function: \(\mathds{1}\)
+
+\renewcommand{\qedsymbol}{$\blacksquare$}                  % QED
+
+% Mathematical operators
+\DeclareMathOperator{\E}{\mathbb{E}}                       % Expected value
+\DeclareMathOperator{\Emax}{\E\!\max}                      % Emax
+\DeclareMathOperator{\var}{var}                            % Variance
+\DeclareMathOperator{\cov}{cov}                            % Covariance
+\DeclareMathOperator{\corr}{corr}                          % Correlation
+\DeclareMathOperator{\avar}{avar}                          % Asymptotic variance
+\DeclareMathOperator*{\plim}{plim}                         % Probability limit
+\DeclareMathOperator{\lag}{lag}                            % Lag operator
+\DeclareMathOperator{\rank}{rank}                          % Rank
+\DeclareMathOperator{\tr}{tr}                              % Trace
+\DeclareMathOperator{\diag}{diag}                          % Diagonal
+\DeclareMathOperator{\I}{I}                                % Identity matrix
+
+\providecommand{\abs}[1]{\left\lvert#1\right\rvert}        % Absolute value
+\providecommand{\norm}[1]{\left\lVert#1\right\rVert}       % Norm
+\providecommand{\ip}[1]{\left\langle#1\right\rangle}       % Inner product
+\providecommand{\csp}{\overline{\mathrm{sp}}}              % Closed span
+\providecommand{\pto}{\overset{p}{\to}}                    % Convergence in probability
+\providecommand{\dto}{\overset{d}{\to}}                    % Convergence in distribution
+\providecommand{\indep}{\perp \!\!\!\! \perp}              % Independent
+
+% Additional commands
+\newcommand\myText[1]{\text{\scriptsize\tabular[t]{@{}c@{}}#1\endtabular}}
+
+
+% File paths
+\newcommand{\figpath}{""}
+\newcommand{\tabpath}{""}
+
+
+\title{Topics in Applied Econometrics}
+\subtitle[]{Regression discontinuity}
+% Single author
+\author[Attila Gyetvai]{Attila Gyetvai}
+\institute[]{Duke Economics \\ Summer 2020}
+% % Multiple authors
+% \author[Gyetvai, Zhu]{Attila Gyetvai\inst{1} \and Maria Zhu\inst{1}}
+% \institute[Duke] % 
+% {
+%  \inst{1} Department of Economics \\ Duke University \and
+% }
+\date{}
+
+
+\begin{document}
+
+{
+\setbeamertemplate{headline}{}            % Empty header
+\setbeamertemplate{footline}{}            % Empty footer  
+\begin{frame}
+  \titlepage
+\end{frame}
+}
+\addtocounter{framenumber}{-1}
+
+% ----------------------------------------------- % 
+\begin{frame}[c]{How to tackle an empirical project}
+  \begin{enumerate}
+    \addtolength{\itemsep}{0.5\baselineskip}
+    \item \textcolor{lightgray}{What causal effects are we interested in?}
+    \item \textcolor{lightgray}{What ideal experiment would capture this effect?}
+    \item What is our identification strategy?
+    \item \textcolor{lightgray}{What is our mode of statistical inference?}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Empirical setting into research design}
+  \begin{itemize}
+    \item So far, we have considered the two extremes of randomization
+    \begin{itemize}
+      \item Perfect randomization: RCT
+      \item No randomization: matching
+    \end{itemize}
+    \item Sometimes the truth lies in between
+    \item \emph{Example:} unemployment insurance
+    \begin{itemize}
+      \item Some baseline level of UI benefits
+      \item For some unemployed in certain regions, additional UI
+      \item What can we learn from comparing them to those in neighboring regions? 
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Treatment thresholds}
+  \begin{itemize}
+    \item Treatment status depends on some eligibility threshold
+    \item ``Just treated'' units are comparable to ``just untreated'' units
+    \item Assignment to treatment at the threshold is as good as random
+    \item How reasonable is this assumption?
+    \begin{itemize}
+      \item Age cutoff: born on June 30 vs.\ July 1
+      \item Area border: east vs.\ west side of a street
+    \end{itemize}
+    \item How strict is the cutoff?
+    \begin{itemize}
+      \item Sharp RD: no one is treated on one side, everyone is treated on the other
+      \item Fuzzy RD: some may be treated on both sides, but the fraction of treated units jumps at the threshold
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Treatment effects with sharp RD}
+  \begin{itemize}
+    \item Does a sharp RD identify ATE?
+    \item Yes\ldots right around the threshold, if compliance is perfect
+    \item Hard to argue that the effect can be extrapolated to further away from the threshold
+    \item \emph{Example:} UI benefits in Austria \citep*[][JOE]{Lalive2008}
+    \begin{itemize}
+      \item Under 50: up to 39 weeks of UI
+      \item 50+: 52 weeks \(\leadsto\) 209 weeks in certain regions
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Treatment effects with sharp RD (cont'd)}
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{fig2.png} \\
+    {\tiny \emph{Source:} \citet*{Lalive2008}}
+  \end{center}
+\end{frame}
+\addtocounter{framenumber}{-1}
+
+\begin{frame}{Treatment effects with sharp RD (cont'd)}
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{fig7.png} \\
+    {\tiny \emph{Source:} \citet*{Lalive2008}}
+  \end{center}
+\end{frame}
+\addtocounter{framenumber}{-1}
+
+\begin{frame}{Treatment effects with sharp RD (cont'd)}
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{fig3.png} \\
+    {\tiny \emph{Source:} \citet*{Lalive2008}}
+  \end{center}
+\end{frame}
+\addtocounter{framenumber}{-1}
+
+\begin{frame}{Treatment effects with sharp RD (cont'd)}
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{fig8.png} \\
+    {\tiny \emph{Source:} \citet*{Lalive2008}}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Treatment effects with fuzzy RD}
+  \begin{itemize}
+    \item Does a fuzzy RD identify ATE?
+    \item No, not even under perfect compliance
+    \item But it identifies\ldots LATE!
+    \item Zoom in on the treated units on the treated side of the threshold
+    \item Even harder to extrapolate results, but arguably valid at the threshold
+    \item \emph{Example:} class size and test scores \citep*[][QJE]{Angrist1999}
+  \end{itemize}
+\end{frame}
+\addtocounter{framenumber}{-1}
+
+\begin{frame}{Treatment effects with fuzzy RD}
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{figa.png} \\
+    {\tiny \emph{Source:} \citet*{Angrist1999}}
+  \end{center}
+\end{frame}
+\addtocounter{framenumber}{-1}
+
+\begin{frame}{Treatment effects with fuzzy RD}
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{figb.png} \\
+    {\tiny \emph{Source:} \citet*{Angrist1999}}
+  \end{center}
+\end{frame}
+
+\appendix
+\begin{frame}[plain,c]
+  \centerline{\Large{{\usebeamercolor[fg]{title} Additional Slides}}}
+\end{frame}
+\addtocounter{framenumber}{-1}
+\begin{frame}[allowframebreaks]{References}
+  \bibliographystyle{mychicago}
+  \linespread{1}
+  \begin{footnotesize}
+  \bibliography{../refs}
+  \end{footnotesize}
+\end{frame}
+
+
+\end{document}
+ 

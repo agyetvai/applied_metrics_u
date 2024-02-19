@@ -1,0 +1,314 @@
+\documentclass[aspectratio=169,compress,handout,t,xcolor=table]{beamer}
+
+%! Mandatory packages
+\usepackage[utf8]{inputenc}                                %! Character encoding
+\usepackage[T1]{fontenc}                                   %! Font encoding
+\usepackage[english]{babel}                                %! Language setting
+\usepackage{graphicx}
+
+%%%% Frame design
+\usetheme{Boadilla}                                        % Design base
+\usecolortheme{default}                                    % Color structure base
+
+% Colors
+\definecolor{MyBackground}{HTML}{FFFAEE}                   % Cream color with dark text works well for dyslexic readers: FFFAEE
+\definecolor{MyBackground}{HTML}{FFFFFF}                   % White for online slides
+\setbeamercolor{background canvas}{bg=MyBackground}
+\definecolor{MyStructure}{HTML}{005471}
+\setbeamercolor{title}{fg=MyStructure}
+\setbeamercolor{frametitle}{fg=MyStructure}
+\setbeamercolor{structure}{fg=MyStructure}
+
+% Fonts
+\usepackage{tgheros}                                       % TG Heros font package
+\beamertemplatenavigationsymbolsempty                      % Disable navigation bar
+
+% Enumerate / itemize design
+\setbeamertemplate{enumerate items}[circle]
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{itemize subitem}[triangle]
+\setbeamertemplate{section in toc}[sections numbered]
+\usepackage{xpatch}                                        % Global itemize/enumerate list separation
+\xpatchcmd{\itemize}
+  {\def\makelabel}
+  {\ifnum\@itemdepth=1\relax
+     \setlength\itemsep{2ex}% separation for first level
+   \else
+     \ifnum\@itemdepth=2\relax
+       \setlength\itemsep{1ex}% separation for second level
+     \else
+       \ifnum\@itemdepth=3\relax
+         \setlength\itemsep{0.5ex}% separation for third level
+   \fi\fi\fi\def\makelabel
+  }
+{}
+{}
+
+
+% Footer
+\setbeamertemplate{footline}
+{
+ \hbox{%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.6ex,dp=1ex,center]{section in foot}%
+    \usebeamerfont{section in foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.75\paperwidth,ht=2.6ex,dp=1ex,center]{section in foot}%
+    \usebeamerfont{section in foot}\insertsubtitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.05\paperwidth,ht=2.6ex,dp=1ex,center]{subsection in foot}%
+    \usebeamerfont{section in foot} \insertframenumber/\inserttotalframenumber
+  \end{beamercolorbox}}%
+
+  \vskip0pt%
+}
+\setbeamertemplate{frametitle}[default][left]              % Push frame title to left
+\setbeamertemplate{navigation symbols}{}                   % Remove navigation symbols
+
+\renewcommand\textbullet{\ensuremath{\bullet}}             % Opress textbullet font warning
+\usepackage{appendixnumberbeamer}                          % Restart slide numbering for backup slides (\appendix)
+
+% Roadmap
+\AtBeginSection[]
+{
+	\ifnum \value{framenumber}>0
+   \begin{frame}[plain]
+       \frametitle{Plan for today}
+       \tableofcontents[currentsection]
+   \end{frame}
+   \addtocounter{framenumber}{-1}
+  \else
+   \fi
+}
+
+% Stable preamble with path
+% Text packages
+\usepackage{enumerate}                                     % Custom enumeration lists
+\usepackage{footmisc}                                      % Stable footnotes in headings
+\usepackage{natbib}                                        % Bibliography
+\usepackage{hyperref}                                      % Hyperreferences
+    \hypersetup{
+      % colorlinks,
+      % citecolor=black,
+      % filecolor=black,
+      % linkcolor=black,
+      urlcolor=MyStructure
+    }
+\usepackage{multicol}                                      % Multiple columns in text
+\usepackage[nointegrals]{wasysym}                          % WASY2 symbols for contradiction \lightning
+\usepackage{algorithm}                                     % Pseudocode packages
+\usepackage{algpseudocode}
+\usepackage{setspace}                                      % Custom line spacing
+
+% Figure and table packages
+\usepackage{float}                                         % Figure floats
+\usepackage[position=top]{subfig}                          % Subfigures
+\usepackage{multirow}                                      % Merged rows in tables
+\usepackage{dcolumn}                                       % Custom table delimiters
+    \newcolumntype{d}[1]{D{.}{.}{#1}}
+    \newcolumntype{m}[1]{D{.}{\$}{#1}}
+    \newcommand\hd[1]{\multicolumn{1}{c}{#1}}
+\usepackage[labelfont=bf, font=normalsize]{caption}        % Bold captions
+    \captionsetup{format=hang}
+\usepackage{array}                                         % Reveal table by columns
+\usepackage{animate}                                       % Animated figures, GIF-like appearance
+\usepackage{media9}                                        % For \mediabutton
+
+% Graphics packages
+\usepackage{tikz}                                          % TikZ drawings
+\usepackage{pgfplots}                                      % PGFPlots plots
+    \pgfplotsset{                                          % PGFPlots options
+        cartesian/.style={                                 % Declaring Cartesian plane style
+            % Axis alignment
+            axis x line=middle,
+            axis y line=middle,
+            % Axis labels alignment
+            every axis x label/.style={at={(current axis.right of origin)},anchor=north west},
+            every axis y label/.style={at={(current axis.above origin)},anchor=north east},
+            % Legend alignment
+            every axis legend/.append style={legend pos=outer north east}
+        },
+        % Version declaration for compatibility
+        compat=1.11
+    }
+\usetikzlibrary{calc}
+    % Node setup for extensive form games
+    \tikzset{
+        % Two node styles for game trees: solid and hollow
+        solid node/.style={circle,draw,inner sep=1.5,fill=black},
+        hollow node/.style={circle,draw,inner sep=1.5},
+        % Solution nodes
+        solidsol node/.style={blue,circle,draw,inner sep=1.5,fill=blue},
+        hollowsol node/.style={blue,circle,draw,inner sep=1.5}
+    }
+
+% Math packages
+\usepackage{amsmath}                                       % AMS math package
+\usepackage{amssymb}                                       % Math symbols
+\usepackage{amsthm}                                        % Custom theorem environments
+\usepackage{units}                                         % Numerical fractions
+\usepackage{centernot}                                     % Logical negation in the middle of characters; e.g. not iff
+\usepackage{dsfont}                                        % For indicator function: \(\mathds{1}\)
+
+\renewcommand{\qedsymbol}{$\blacksquare$}                  % QED
+
+% Mathematical operators
+\DeclareMathOperator{\E}{\mathbb{E}}                       % Expected value
+\DeclareMathOperator{\Emax}{\E\!\max}                      % Emax
+\DeclareMathOperator{\var}{var}                            % Variance
+\DeclareMathOperator{\cov}{cov}                            % Covariance
+\DeclareMathOperator{\corr}{corr}                          % Correlation
+\DeclareMathOperator{\avar}{avar}                          % Asymptotic variance
+\DeclareMathOperator*{\plim}{plim}                         % Probability limit
+\DeclareMathOperator{\lag}{lag}                            % Lag operator
+\DeclareMathOperator{\rank}{rank}                          % Rank
+\DeclareMathOperator{\tr}{tr}                              % Trace
+\DeclareMathOperator{\diag}{diag}                          % Diagonal
+\DeclareMathOperator{\I}{I}                                % Identity matrix
+
+\providecommand{\abs}[1]{\left\lvert#1\right\rvert}        % Absolute value
+\providecommand{\norm}[1]{\left\lVert#1\right\rVert}       % Norm
+\providecommand{\ip}[1]{\left\langle#1\right\rangle}       % Inner product
+\providecommand{\csp}{\overline{\mathrm{sp}}}              % Closed span
+\providecommand{\pto}{\overset{p}{\to}}                    % Convergence in probability
+\providecommand{\dto}{\overset{d}{\to}}                    % Convergence in distribution
+\providecommand{\indep}{\perp \!\!\!\! \perp}              % Independent
+
+% Additional commands
+\newcommand\myText[1]{\text{\scriptsize\tabular[t]{@{}c@{}}#1\endtabular}}
+
+
+% File paths
+\newcommand{\figpath}{""}
+\newcommand{\tabpath}{""}
+
+
+\title{Topics in Applied Econometrics}
+\subtitle[]{Randomized experiments}
+% Single author
+\author[Attila Gyetvai]{Attila Gyetvai}
+\institute[]{Duke Economics \\ Summer 2020}
+% % Multiple authors
+% \author[Gyetvai, Zhu]{Attila Gyetvai\inst{1} \and Maria Zhu\inst{1}}
+% \institute[Duke] % 
+% {
+%  \inst{1} Department of Economics \\ Duke University \and
+% }
+\date{}
+
+
+\begin{document}
+
+{
+\setbeamertemplate{headline}{}            % Empty header
+\setbeamertemplate{footline}{}            % Empty footer  
+\begin{frame}
+  \titlepage
+\end{frame}
+}
+\addtocounter{framenumber}{-1}
+
+% ----------------------------------------------- % 
+\begin{frame}[c]{How to tackle an empirical project}
+  \begin{enumerate}
+    \addtolength{\itemsep}{0.5\baselineskip}
+    \item \textcolor{lightgray}{What causal effects are we interested in?}
+    \item What ideal experiment would capture this effect?
+    \item \textcolor{lightgray}{What is our identification strategy?}
+    \item \textcolor{lightgray}{What is our mode of statistical inference?}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Consequences of randomization}
+  \begin{itemize}
+    \item Imagine treatment and control groups with no compliance issues 
+    \item Units are \emph{truly} randomly assigned to treatment
+    \item What happens to the expected outcomes?
+    \begin{align*}
+      \E(Y_{1i} \,|\, D_i=1) = \E(Y_{1i} \,|\, D_i=0)
+    \end{align*}
+    \item But the potential outcome under treatment for the treated is not counterfactual!
+    \item Therefore the ATE is simply
+    \begin{align*}
+      ATE = \E(Y_i \,|\, D_i=1) - \E(Y_i \,|\, D_i=0)
+    \end{align*}
+    \item Both terms are measurable, thus the ATE is identified
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Randomized controlled trials (RCTs)}
+  \begin{itemize}
+    \item Experimental designs to test the effect of a well-defined treatment
+    \item Originated in medicine
+    \item \emph{Idea:} ``the only thing different across similar units in treatment/control is chance''
+    \item Under perfect randomization, potential outcomes are independent of treatment status
+    \begin{align*}
+      (Y_{1i}, Y_{0i} \indep D_i = Z_i)
+    \end{align*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{RCTs with imperfect compliance}
+  \begin{itemize}
+    \item Randomizing assignment is relatively simple
+    \item However, ensuring random treatment status is much harder
+    \item \emph{Example:} Dallas Buyers Club (\href{https://youtu.be/ety5kOjlXoU}{\color{blue}\underline{trailer}})
+    \begin{itemize}
+      \item HIV/AIDS treatment drug is under FDA testing
+      \item The central question: is the drug effective?
+      \item Patients are randomly given the drug and placebo
+      \item However, compliance is less than perfect\ldots
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{RCTs with imperfect compliance (cont'd)}
+  \begin{itemize}
+    \item Under perfect randomization, potential outcomes are independent of treatment assignment
+    \begin{align*}
+      (Y_{1i}, Y_{0i} \indep Z_i)
+    \end{align*}
+    \item We can identify ITT
+    \begin{align*}
+      ITT = \E(Y_{i} \,|\, Z_i=1) - \E(Y_{i} \,|\, Z_i=0)
+    \end{align*}
+    \item But is ITT enough? Not in the case of HIV/AIDS treatment
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{RCTs in social sciences}
+  \begin{itemize}
+    \item ``Gold standard'' of impact assessment
+    \item However, rare in practice
+    \begin{itemize}
+      \item Possibility of implementation
+      \item Moral issues
+      \item Social cost
+      \item Financial cost
+      \item Randomized design from day 0
+    \end{itemize}
+    \item Organizations driving the experimental movement
+    \begin{itemize}
+      \item J-PAL, Gates Foundation, IMF, World Bank
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{In the absence RCTs}
+  \begin{itemize}
+    \item More often than not, you will not be able to run your own experiment
+    \item Designs providing ``as-good-as-random'' assignment
+    \begin{itemize}
+      \item Natural experiments
+      \item Quasi-experiments
+    \end{itemize}
+    \item However, we must be careful with the underlying assumptions
+    \begin{itemize}
+      \item \emph{Example:} earthquakes are random, effects may not be
+    \end{itemize}
+    \item We can learn from nonexperimental settings too
+    \item But: always think of the ideal experiment
+  \end{itemize}
+\end{frame}
+
+\end{document}
+ 
